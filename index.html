@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyber Calculator</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+primary: '#00f3ff',
+secondary: '#b700ff'
+},
+borderRadius: {
+'none': '0px',
+'sm': '4px',
+DEFAULT: '8px',
+'md': '12px',
+'lg': '16px',
+'xl': '20px',
+'2xl': '24px',
+'3xl': '32px',
+'full': '9999px',
+'button': '8px'
+}
+}
+}
+}
+</script>
+<style>
+@keyframes neonBorder {
+0% { box-shadow: 0 0 5px #00f3ff, 0 0 10px #00f3ff, 0 0 20px #00f3ff; }
+50% { box-shadow: 0 0 10px #b700ff, 0 0 20px #b700ff, 0 0 40px #b700ff; }
+100% { box-shadow: 0 0 5px #00f3ff, 0 0 10px #00f3ff, 0 0 20px #00f3ff; }
+}
+@keyframes neonText {
+0% { text-shadow: 0 0 5px #00f3ff, 0 0 10px #00f3ff; }
+50% { text-shadow: 0 0 10px #b700ff, 0 0 20px #b700ff; }
+100% { text-shadow: 0 0 5px #00f3ff, 0 0 10px #00f3ff; }
+}
+.neon-border {
+animation: neonBorder 2s infinite;
+}
+.neon-text {
+animation: neonText 2s infinite;
+}
+.cyber-input {
+background: rgba(255,255,255,0.1);
+border: 1px solid rgba(0,243,255,0.3);
+transition: all 0.3s ease;
+animation: neonBorder 2s infinite;
+}
+.cyber-input:focus {
+border-color: #00f3ff;
+box-shadow: 0 0 15px rgba(0,243,255,0.5);
+}
+.cyber-button {
+background: linear-gradient(45deg, #00f3ff, #b700ff);
+transition: all 0.3s ease;
+animation: neonBorder 2s infinite;
+}
+.cyber-button:hover {
+transform: translateY(-2px);
+box-shadow: 0 0 20px rgba(183,0,255,0.5);
+}
+.result-card {
+background: rgba(10,10,15,0.8);
+backdrop-filter: blur(10px);
+}
+body {
+background-color: #0a0a0f;
+background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a0f 100%);
+font-family: 'Space Mono', monospace;
+}
+</style>
+</head>
+<body class="min-h-screen text-white p-4">
+<div class="max-w-md mx-auto mt-10 p-6 rounded-lg neon-border">
+<h1 class="text-3xl font-bold mb-8 neon-text tracking-wider">CYBER PRICE CALCULATOR</h1>
+<div class="space-y-6">
+<div class="relative">
+<label class="block text-sm mb-2 text-primary">TAXED AMOUNT</label>
+<input type="number" id="taxedAmount" class="cyber-input w-full p-3 rounded-lg text-lg" placeholder="Enter amount">
+</div>
+<div class="relative">
+<label class="block text-sm mb-2 text-primary">TAX PERCENTAGE</label>
+<input type="number" id="taxPercent" class="cyber-input w-full p-3 rounded-lg text-lg" placeholder="Enter tax %">
+</div>
+<button onclick="calculateActualPrice()" class="cyber-button w-full p-3 rounded-lg text-lg font-bold">
+CALCULATE BASE PRICE
+</button>
+<div id="actualPriceResult" class="result-card p-4 rounded-lg text-center hidden"></div>
+<div class="relative">
+<label class="block text-sm mb-2 text-primary">EXTRA CHARGES</label>
+<input type="number" id="extraCharges" class="cyber-input w-full p-3 rounded-lg text-lg" placeholder="Enter extra charges">
+</div>
+<div class="relative">
+<label class="block text-sm mb-2 text-primary">WEIGHT (KG)</label>
+<input type="number" id="weight" class="cyber-input w-full p-3 rounded-lg text-lg" placeholder="Enter weight">
+</div>
+<button onclick="calculateFinalValues()" class="cyber-button w-full p-3 rounded-lg text-lg font-bold">
+CALCULATE FINAL VALUES
+</button>
+<div class="space-y-4">
+<div id="freightValueResult" class="result-card p-4 rounded-lg text-center hidden"></div>
+<div id="grandTotalResult" class="result-card p-4 rounded-lg text-center hidden"></div>
+<div id="ratePerKgResult" class="result-card p-4 rounded-lg text-center hidden"></div>
+</div>
+</div>
+</div>
+<script>
+let actualPrice = 0;
+function showResult(elementId, text) {
+const element = document.getElementById(elementId);
+element.innerText = text;
+element.classList.remove('hidden');
+element.classList.add('neon-text');
+}
+function calculateActualPrice() {
+const taxedAmount = parseFloat(document.getElementById("taxedAmount").value);
+const taxPercent = parseFloat(document.getElementById("taxPercent").value);
+if (!taxedAmount || !taxPercent) {
+showResult("actualPriceResult", "PLEASE ENTER VALID VALUES");
+return;
+}
+actualPrice = (taxedAmount * 100) / (100 + taxPercent);
+showResult("actualPriceResult", `BASE PRICE: ${actualPrice.toFixed(2)} CR`);
+}
+function calculateFinalValues() {
+const extraCharges = parseFloat(document.getElementById("extraCharges").value) || 0;
+const taxPercent = parseFloat(document.getElementById("taxPercent").value);
+const weight = parseFloat(document.getElementById("weight").value) || 0;
+const freightValue = actualPrice - extraCharges;
+const grandTotal = (freightValue + extraCharges) * (1 + (taxPercent / 100));
+const ratePerKg = weight > 0 ? freightValue / weight : 0;
+showResult("freightValueResult", `FREIGHT VALUE: ${freightValue.toFixed(2)} CR`);
+showResult("grandTotalResult", `GRAND TOTAL: ${grandTotal.toFixed(2)} CR`);
+showResult("ratePerKgResult", `RATE PER KG: ${ratePerKg.toFixed(4)} CR`);
+}
+</script>
+</body>
+</html>
