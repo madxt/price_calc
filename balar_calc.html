@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balar Calculation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#00f3ff',
+                        secondary: '#b700ff'
+                    },
+                    borderRadius: {
+                        'none': '0px',
+                        'sm': '4px',
+                        DEFAULT: '8px',
+                        'md': '12px',
+                        'lg': '16px',
+                        'xl': '20px',
+                        '2xl': '24px',
+                        '3xl': '32px',
+                        'full': '9999px',
+                        'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @keyframes neonBorder {
+            0% { box-shadow: 0 0 5px #00f3ff, 0 0 10px #00f3ff, 0 0 20px #00f3ff; }
+            50% { box-shadow: 0 0 10px #b700ff, 0 0 20px #b700ff, 0 0 40px #b700ff; }
+            100% { box-shadow: 0 0 5px #00f3ff, 0 0 10px #00f3ff, 0 0 20px #00f3ff; }
+        }
+        .neon-border { animation: neonBorder 2s infinite; }
+        .neon-text { animation: neonBorder 2s infinite; }
+        .cyber-input {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(0,243,255,0.3);
+            transition: all 0.3s ease;
+            animation: neonBorder 2s infinite;
+        }
+        .cyber-button {
+            background: linear-gradient(45deg, #00f3ff, #b700ff);
+            animation: neonBorder 2s infinite;
+        }
+        .result-card {
+            background: rgba(10,10,15,0.8);
+            backdrop-filter: blur(10px);
+        }
+        body {
+            background-color: #0a0a0f;
+            background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a0f 100%);
+            font-family: 'Space Mono', monospace;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-white p-4">
+    <div class="max-w-md mx-auto mt-10 p-6 rounded-lg neon-border">
+        <h1 class="text-3xl font-bold mb-8 neon-text tracking-wider">BALAR CALCULATION</h1>
+        <div class="space-y-6">
+            <div class="relative">
+                <label class="block text-sm mb-2 text-primary">SINGLE BOX</label>
+                <input type="number" id="singleBox" class="cyber-input w-full p-3 rounded-lg text-lg" placeholder="Enter count">
+            </div>
+            <div class="relative">
+                <label class="block text-sm mb-2 text-primary">DOUBLE BOX</label>
+                <input type="number" id="doubleBox" class="cyber-input w-full p-3 rounded-lg text-lg" placeholder="Enter count">
+            </div>
+            <div class="relative">
+                <label class="block text-sm mb-2 text-primary">WEIGHT (KG)</label>
+                <input type="number" id="weight" class="cyber-input w-full p-3 rounded-lg text-lg" placeholder="Enter weight">
+            </div>
+            <button onclick="calculateBalar()" class="cyber-button w-full p-3 rounded-lg text-lg font-bold">
+                CALCULATE BALAR
+            </button>
+            <div id="balarResult" class="result-card p-4 rounded-lg text-center hidden"></div>
+            <button onclick="window.location.href='index.html'" class="cyber-button w-full p-3 rounded-lg text-lg font-bold mt-4">
+                BACK TO MAIN PAGE
+            </button>
+        </div>
+    </div>
+    <script>
+        function calculateBalar() {
+            let singleBox = parseFloat(document.getElementById("singleBox").value) || 0;
+            let doubleBox = parseFloat(document.getElementById("doubleBox").value) || 0;
+            let weight = parseFloat(document.getElementById("weight").value) || 1; // Prevent division by zero
+            
+            let balarRate = (singleBox * 75 + doubleBox * 85) / weight;
+            let resultElement = document.getElementById("balarResult");
+            resultElement.innerText = `Rate per KG: ${balarRate.toFixed(6)}`;
+            resultElement.classList.remove("hidden");
+            resultElement.classList.add("neon-text");
+        }
+    </script>
+</body>
+</html>
